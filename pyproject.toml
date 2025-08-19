@@ -4,8 +4,9 @@ version = "0.1.0"
 description = "Chatbot API"
 readme = "README.md"
 requires-python = ">=3.12,<4.0"
+maintainers = [{ name = "Daniel Pantoja", email = "panttoja.17@gmail.com" }]
 
-dependencies = ["fastapi>=0.116.1", "uvicorn>=0.35.0"]
+dependencies = ["fastapi>=0.116.1", "gunicorn>=23.0.0", "uvicorn>=0.35.0"]
 
 [dependency-groups]
 dev = ["pre-commit>=4.3.0", "ruff>=0.12.9"]
