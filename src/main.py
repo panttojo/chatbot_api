@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api import router
 from core.settings import settings
 from core.utils.environment import EnvironmentEnum
 from db.postgres.session import init_db, test_db_connection
@@ -30,12 +31,9 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    app.include_router(router.root_router)
+
     return app
 
 
 app = create_app()
-
-
-@app.get("/")
-async def root() -> dict[str, str]:
-    return {"message": "Hello World"}

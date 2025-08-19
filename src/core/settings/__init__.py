@@ -51,6 +51,7 @@ class SettingsManager:
 
     def _configure_logs(self) -> None:
         log_level = "DEBUG" if self.settings.DEBUG else "INFO"
+        logger.remove()
         logger.add(
             sys.stdout, colorize=self.settings.COLORIZE_LOG, level=log_level, serialize=self.settings.SERIALIZE_LOG
         )
