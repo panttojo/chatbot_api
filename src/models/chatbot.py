@@ -1,23 +1,21 @@
-from sqlalchemy import UUID, Column, Enum, ForeignKey, String
-from sqlalchemy.orm import Mapped, relationship
+from uuid import UUID
+
+from sqlalchemy import Enum, String
+from sqlmodel import Field, Relationship
 
 from .base import BaseModel
 from .enums import RoleEnum
 
 
-class Conversation(BaseModel):
-    __tablename__ = "conversations"
+class Message(BaseModel, table=True):
+    role: RoleEnum = Field(sa_type=Enum(RoleEnum))
+    message: str = Field(sa_type=String(255))
 
-    messages: Mapped[list["Message"]] = relationship("Message", back_populates="conversation")
+    conversation_id: UUID = Field(foreign_key="conversation.id")
+    conversation: "Conversation" = Relationship(back_populates="messages")
 
 
-class Message(BaseModel):
-    __tablename__ = "messages"
-
-    conversation_id: UUID = Column(
-        ForeignKey(Conversation.id, deferrable=True, initially="DEFERRED"), nullable=False, index=True
+class Conversation(BaseModel, table=True):
+    messages: list["Message"] = Relationship(
+        back_populates="conversation", sa_relationship_kwargs={"order_by": Message.created_at}
     )
-    role: RoleEnum = Column(Enum(RoleEnum), nullable=False)
-    message: str = Column(String(255), nullable=False)
-
-    conversation: Mapped[Conversation] = relationship("Conversation", back_populates="messages")
