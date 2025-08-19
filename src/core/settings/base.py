@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     # ----------------------------------------------------------------------------------
     APP_NAME: str = "Chatbot API"
     VERSION: str = "0.1.0"
+    TIMEZONE: str = "America/Mexico_City"
 
     CORS_ALLOWED_ORIGINS: list[str] = []
 

@@ -4,15 +4,22 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from core.settings import settings
+from models.base import Base
+from models.chatbot import *  # noqa: F403
 
 APPLICATION_NAME = settings.APP_NAME.replace(" ", "-").lower()
 
 
 async_engine = create_async_engine(
     settings.DATABASE_DSN.unicode_string(),
-    connect_args={"app_name": APPLICATION_NAME},
+    connect_args={"application_name": APPLICATION_NAME},
     echo=settings.DEBUG,
 )
+
+
+async def init_db() -> None:
+    async with async_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
 
 async def test_db_connection() -> bool | None:

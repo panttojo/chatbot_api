@@ -5,12 +5,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.settings import settings
-from db.postgres.session import test_db_connection
+from core.utils.environment import EnvironmentEnum
+from db.postgres.session import init_db, test_db_connection
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
     await test_db_connection()
+
+    # Only initialize the database in local environment
+    if settings.ENVIRONMENT == EnvironmentEnum.LOCAL:
+        await init_db()
     yield
 
 
