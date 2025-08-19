@@ -1,0 +1,35 @@
+[project]
+name = "chatbot-api"
+version = "0.1.0"
+description = "Chatbot API"
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+
+dependencies = ["fastapi>=0.116.1", "uvicorn>=0.35.0"]
+
+[dependency-groups]
+dev = ["pre-commit>=4.3.0", "ruff>=0.12.9"]
+
+
+[tool.black]
+line-length = 120
+target-version = ["py312"]
+
+[tool.ruff]
+src = ["src"]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D",
+    "COM812", # "Trailing comma missing". If black is happy, I'm happy.
+    "E501",   # "Line too long". If black is happy, I'm happy.
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
