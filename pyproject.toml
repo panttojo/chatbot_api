@@ -8,11 +8,14 @@ maintainers = [{ name = "Daniel Pantoja", email = "panttoja.17@gmail.com" }]
 
 dependencies = [
     "fastapi>=0.116.1",
+    "greenlet>=3.2.4",
     "gunicorn>=23.0.0",
     "loguru>=0.7.3",
+    "psycopg[binary]>=3.2.9",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
     "sentry-sdk>=2.35.0",
+    "sqlalchemy>=2.0.43",
     "uvicorn>=0.35.0",
 ]
 
@@ -21,6 +24,7 @@ dev = ["pre-commit>=4.3.0", "ruff>=0.12.9"]
 
 [tool.uv]
 package = false
+
 
 [tool.black]
 line-length = 120

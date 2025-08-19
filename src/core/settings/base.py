@@ -1,5 +1,6 @@
 import os
 
+from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from core.utils.environment import EnvironmentEnum
@@ -16,9 +17,13 @@ class Settings(BaseSettings):
     COLORIZE_LOG: bool = False
     SERIALIZE_LOG: bool = True
 
+    # Database Settings
+    # ----------------------------------------------------------------------------------
+    DATABASE_DSN: PostgresDsn
+
     # Project Settings
     # ----------------------------------------------------------------------------------
-    DESCRIPTION: str = "Chatbot API"
+    APP_NAME: str = "Chatbot API"
     VERSION: str = "0.1.0"
 
     CORS_ALLOWED_ORIGINS: list[str] = []
