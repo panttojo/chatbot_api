@@ -40,8 +40,9 @@ line-length = 120
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "D",
+    "A002",   # Function arguments are shadowing a Python builtin
     "COM812", # "Trailing comma missing". If black is happy, I'm happy.
+    "D",
     "E501",   # "Line too long". If black is happy, I'm happy.
 ]
 

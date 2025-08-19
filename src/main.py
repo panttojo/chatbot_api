@@ -14,8 +14,8 @@ from db.postgres.session import init_db, test_db_connection
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
     await test_db_connection()
 
-    # Only initialize the database in local environment
-    if settings.ENVIRONMENT == EnvironmentEnum.LOCAL:
+    # Only initialize the database in local and testing environment
+    if settings.ENVIRONMENT in [EnvironmentEnum.LOCAL, EnvironmentEnum.TESTING]:
         await init_db()
     yield
 
@@ -32,6 +32,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(router.root_router)
+    app.include_router(router.api_v1_router)
 
     return app
 
