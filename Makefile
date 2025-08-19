@@ -9,7 +9,9 @@ PORT := 8000
 HOST := 0.0.0.0
 ENVIRONMENT := local
 
+export ENVIRONMENT := $(ENVIRONMENT)
 
+# -----------------------------------------------------------------------------
 .PHONY: help
 help: ## Show help
 	@echo "Usage: make <target>"
@@ -30,6 +32,7 @@ lint: ## Run linters
 install: ## Install and configure the project dependencies
 	uv pip install --upgrade pip wheel
 	uv sync
+	uv pip install .
 	uv pip install --group dev
 	uv run pre-commit install
 
