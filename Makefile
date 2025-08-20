@@ -29,15 +29,24 @@ lint: ## Run linters
 	uv run pre-commit run --all-files
 
 .PHONY: install
-install: ## Install and configure the project dependencies
-	uv pip install --upgrade pip wheel
-	uv sync
-	uv pip install --group dev
-	uv run pre-commit install
+install: ## Install all requirements to run the service
+	@if ! command -v uv &> /dev/null; then \
+		echo "Error: 'uv' is not installed. Please install it to continue."; \
+		echo "Installation instructions: https://astral.sh/uv/install.sh"; \
+		exit 1; \
+	fi
+	@echo "Creating virtual environment..."
+	@uv venv
+	@echo "Installing dependencies..."
+	@uv pip install -e . --group dev
+	@echo "Installing pre-commit hooks..."
+	@uv run pre-commit install
+	@echo "Installation complete!"
+	@source .venv/bin/activate
 
 .PHONY: update_libs
 update_libs: ## Update all installed libraries
-	uv pip install --upgrade $(shell uv run uv pip list --format freeze | cut -d= -f1)
+	uv lock --upgrade
 
 .PHONY: clean_cache
 clean_cache: ## Remove all temporary files like pycache
@@ -56,3 +65,15 @@ start: install ## Start the development server
 .PHONY: app
 app: ## Run the application
 	@COMPOSE_BAKE=true docker compose up --build app
+
+.PHONY: test
+test: ## Run the tests
+	@docker compose up --build test
+
+.PHONY: down
+down: ## Teardown of all running services
+	@docker compose down
+
+.PHONY: clean
+clean: ## Teardown and removal of all containers, volumes, and images
+	@docker compose down --volumes --remove-orphans --rmi all

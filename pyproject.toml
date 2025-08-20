@@ -73,7 +73,6 @@ pythonpath = ["src"]
 
 [tool.coverage.run]
 omit = ["__init__.py", "test_*.py", "*/core/bots/*", "*/tests/*"]
-# concurrency = ["thread", "gevent"]
 
 [tool.coverage.report]
 show_missing = true
