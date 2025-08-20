@@ -1,7 +1,9 @@
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic_core import PydanticCustomError
 
+from core.settings import settings
 from models.enums import RoleEnum
 
 
@@ -17,6 +19,17 @@ class MessageSchema(BaseModel):
 class CreateMessageSchema(BaseModel):
     message: str
     conversation_id: UUID | None = None
+
+    @field_validator("message", mode="before")
+    @classmethod
+    def validate_message_length(cls, message: str) -> str:
+        if len(message) > settings.MAX_MESSAGE_LENGTH:
+            msg = "value_error"
+            raise PydanticCustomError(
+                msg,
+                "Message length must be less than 1000 characters",
+            )
+        return message
 
 
 # Conversation Schemas

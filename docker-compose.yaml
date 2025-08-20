@@ -14,8 +14,26 @@ services:
       context: .
       dockerfile: deployment/Dockerfile
     env_file:
-      - envs/.env.local
+      - envs/.env.development
     ports:
       - 8000:8000
     depends_on:
       - db
+
+  db_testing:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: testing
+
+  test:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile.testing
+    environment:
+      - ENVIRONMENT=testing
+      - DATABASE_DSN=postgresql+psycopg://postgres:secret@db_testing:5432/testing
+      - LLM_API_KEY=test-123
+    depends_on:
+      - db_testing

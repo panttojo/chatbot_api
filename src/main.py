@@ -15,7 +15,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: ARG001
     await test_db_connection()
 
     # Only initialize the database in local and testing environment
-    if settings.ENVIRONMENT in [EnvironmentEnum.LOCAL, EnvironmentEnum.TESTING]:
+    if settings.ENVIRONMENT == EnvironmentEnum.LOCAL:
         await init_db()
     yield
 

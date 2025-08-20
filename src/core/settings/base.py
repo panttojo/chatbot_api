@@ -29,6 +29,7 @@ class Settings(BaseSettings):
 
     CORS_ALLOWED_ORIGINS: list[str] = []
     MAX_HISTORY_MESSAGES: int = 5
+    MAX_MESSAGE_LENGTH: int = 1000
 
     # Third Party Settings
     # ----------------------------------------------------------------------------------
