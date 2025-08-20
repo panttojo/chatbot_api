@@ -1,2 +1,10 @@
 docker-compose.yml
-.env*
+
+env*
+envs/*
+
+*.log
+*.tmp
+*.swp
+__pycache__/
+*.pyc
