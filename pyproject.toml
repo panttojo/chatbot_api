@@ -11,6 +11,7 @@ dependencies = [
     "greenlet>=3.2.4",
     "gunicorn>=23.0.0",
     "loguru>=0.7.3",
+    "openai>=1.100.2",
     "psycopg[binary]>=3.2.9",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
@@ -41,9 +42,15 @@ line-length = 120
 select = ["ALL"]
 ignore = [
     "A002",   # Function arguments are shadowing a Python builtin
+    "ANN002", # Missing type annotation for `*args`
+    "ANN003", # Missing type annotation for `**kwargs`
+    "ARG002", # Unused method argument: `args`
+    "ARG003", # Unused method argument: `kwargs`
     "COM812", # "Trailing comma missing". If black is happy, I'm happy.
     "D",
     "E501",   # "Line too long". If black is happy, I'm happy.
+    "FBT",
+
 ]
 
 [tool.ruff.lint.pydocstyle]

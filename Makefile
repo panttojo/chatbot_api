@@ -39,8 +39,8 @@ install: ## Install and configure the project dependencies
 update_libs: ## Update all installed libraries
 	uv pip install --upgrade $(shell uv run uv pip list --format freeze | cut -d= -f1)
 
-.PHONY: clean
-clean: ## Remove all temporary files like pycache
+.PHONY: clean_cache
+clean_cache: ## Remove all temporary files like pycache
 	find . -type f -name "*.rdb" -delete
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name "__pycache__" -exec rm -rf {} +
