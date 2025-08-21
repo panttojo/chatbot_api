@@ -66,6 +66,10 @@ start: install ## Start the development server
 app: ## Run the application
 	@COMPOSE_BAKE=true docker compose up --build app
 
+.PHONY: run
+run: ## Run the application
+	@COMPOSE_BAKE=true docker compose up --build app
+
 .PHONY: test
 test: ## Run the tests
 	@docker compose up --build test
