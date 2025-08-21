@@ -51,7 +51,6 @@ ignore = [
     "D",
     "E501",   # "Line too long". If black is happy, I'm happy.
     "FBT",
-
 ]
 
 
@@ -72,8 +71,8 @@ pythonpath = ["src"]
 
 
 [tool.coverage.run]
-omit = ["__init__.py", "test_*.py", "*/core/bots/*", "*/tests/*"]
+omit = ["__init__.py", "test_*.py", "*/tests/*"]
 
 [tool.coverage.report]
 show_missing = true
-omit = ["__init__.py", "test_*.py", "*/core/bots/*", "*/tests/*"]
+omit = ["__init__.py", "test_*.py", "*/tests/*"]

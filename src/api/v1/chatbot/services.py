@@ -37,9 +37,11 @@ class ChatbotService:
         await self.storage.refresh(conversation, ["messages"])
 
     def get_previous_response_id(self, messages: list[Message]) -> str | None:
-        bot_messages = [message for message in messages if message.role == RoleEnum.BOT]
+        bot_messages = [
+            message for message in messages if message.role == RoleEnum.BOT and message.extra_data.get("id")
+        ]
         if bot_messages:
-            return bot_messages[-1].extra_data["id"]
+            return bot_messages[-1].extra_data.get("id")
         return None
 
     async def handle_message(self, payload: CreateMessageSchema) -> Conversation:
