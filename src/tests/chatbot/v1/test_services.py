@@ -9,7 +9,7 @@ from models.enums import RoleEnum
 
 
 @pytest.mark.asyncio
-async def test_chatbot_service(session, mock_openai):
+async def test_chatbot_service(session, mock_openai_chat, mock_openai_create_conversation):
     service = ChatbotService(session=session)
     assert service is not None
 
@@ -29,7 +29,7 @@ async def test_chatbot_service(session, mock_openai):
 
 
 @pytest.mark.asyncio
-async def test_chatbot_service_retrieve_conversation(session, mock_openai):
+async def test_chatbot_service_retrieve_conversation(session, mock_openai_chat, mock_openai_create_conversation):
     service = ChatbotService(session=session)
     assert service is not None
 
@@ -43,7 +43,9 @@ async def test_chatbot_service_retrieve_conversation(session, mock_openai):
 
 
 @pytest.mark.asyncio
-async def test_chatbot_service_retrieve_conversation_not_found(session, mock_openai):
+async def test_chatbot_service_retrieve_conversation_not_found(
+    session, mock_openai_chat, mock_openai_create_conversation
+):
     service = ChatbotService(session=session)
     assert service is not None
 
@@ -52,7 +54,7 @@ async def test_chatbot_service_retrieve_conversation_not_found(session, mock_ope
 
 
 @pytest.mark.asyncio
-async def test_chatbot_service_save_message(session, mock_openai):
+async def test_chatbot_service_save_message(session, mock_openai_chat, mock_openai_create_conversation):
     service = ChatbotService(session=session)
     assert service is not None
 
@@ -64,7 +66,7 @@ async def test_chatbot_service_save_message(session, mock_openai):
 
 
 @pytest.mark.asyncio
-async def test_chatbot_service_get_previous_response_id(session, mock_openai):
+async def test_chatbot_service_get_previous_response_id(session, mock_openai_chat, mock_openai_create_conversation):
     service = ChatbotService(session=session)
     assert service is not None
 

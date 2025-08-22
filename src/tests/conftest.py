@@ -29,7 +29,7 @@ def client():
 
 
 @pytest.fixture
-def mock_openai():
+def mock_openai_chat():
     with patch("core.bots.openai.OpenAIBot.chat") as mock_chat:
         mock_response = MagicMock()
         mock_response.output_text = "Test response"
@@ -38,3 +38,14 @@ def mock_openai():
 
         mock_chat.return_value = mock_response
         yield mock_chat
+
+
+@pytest.fixture
+def mock_openai_create_conversation():
+    with patch("core.bots.openai.OpenAIBot.create_conversation") as mock_create_conversation:
+        mock_response = MagicMock()
+        mock_response.id = "conv-123"
+        mock_response.model_dump.return_value = {"id": "conv-123"}
+
+        mock_create_conversation.return_value = mock_response
+        yield mock_create_conversation

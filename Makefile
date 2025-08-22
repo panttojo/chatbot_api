@@ -38,7 +38,7 @@ install: ## Install all requirements to run the service
 	@echo "Creating virtual environment..."
 	@uv venv
 	@echo "Installing dependencies..."
-	@uv pip install -e . --group dev
+	@uv pip install -r pyproject.toml --group dev
 	@echo "Installing pre-commit hooks..."
 	@uv run pre-commit install
 	@echo "Installation complete!"

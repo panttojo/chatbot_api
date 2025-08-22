@@ -2,6 +2,10 @@ from fastapi import HTTPException
 
 
 class BaseHTTPException(HTTPException):
+    """
+    Base HTTP exception class.
+    """
+
     status_code = 500
     detail = "Internal Server Error"
 
@@ -10,10 +14,18 @@ class BaseHTTPException(HTTPException):
 
 
 class BadRequestException(BaseHTTPException):
+    """
+    Bad request exception class.
+    """
+
     status_code = 400
     detail = "Bad Request"
 
 
 class NotFoundException(BaseHTTPException):
+    """
+    Not found exception class.
+    """
+
     status_code = 404
     detail = "Not Found"

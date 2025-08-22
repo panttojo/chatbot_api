@@ -17,6 +17,8 @@ class Message(BaseModel, table=True):
 
 
 class Conversation(BaseModel, table=True):
+    external_id: str = Field(sa_type=Text)
+
     messages: list["Message"] = Relationship(
         back_populates="conversation", sa_relationship_kwargs={"order_by": Message.created_at}
     )

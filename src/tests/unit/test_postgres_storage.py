@@ -10,7 +10,7 @@ async def test_postgres_storage_save(session) -> None:
     storage = PostgresStorage(session)
     assert storage is not None
 
-    conversation = await storage.save(Conversation())
+    conversation = await storage.save(Conversation(external_id="123"))
     assert conversation is not None
 
     message = await storage.save(Message(message="Test Message", conversation_id=conversation.id, role=RoleEnum.USER))
@@ -22,7 +22,7 @@ async def test_postgres_storage_retrieve(session) -> None:
     storage = PostgresStorage(session)
     assert storage is not None
 
-    conversation = await storage.save(Conversation())
+    conversation = await storage.save(Conversation(external_id="123"))
     assert conversation is not None
 
     retrieved_conversation = await storage.retrieve(Conversation, conversation.id)
@@ -35,7 +35,7 @@ async def test_postgres_storage_refresh(session) -> None:
     storage = PostgresStorage(session)
     assert storage is not None
 
-    conversation = await storage.save(Conversation())
+    conversation = await storage.save(Conversation(external_id="123"))
     assert conversation is not None
 
     message = await storage.save(Message(message="Test Message", conversation_id=conversation.id, role=RoleEnum.USER))

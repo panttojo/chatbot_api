@@ -1,5 +1,6 @@
 from loguru import logger
-from openai import APITimeoutError, AuthenticationError, OpenAI, RateLimitError
+from openai import APITimeoutError, AsyncOpenAI, AuthenticationError, RateLimitError
+from openai.types.conversations import Conversation
 from openai.types.responses import Response
 
 from core.bots.base import BaseBot
@@ -10,28 +11,50 @@ from .schemas import ChatErrorResponse
 
 class OpenAIBot(BaseBot):
     def __init__(self) -> None:
-        self.client = OpenAI(api_key=settings.LLM_API_KEY.get_secret_value())
+        self.client = AsyncOpenAI(api_key=settings.LLM_API_KEY.get_secret_value())
 
-    def chat(
+    async def create_conversation(self) -> Conversation:
+        """
+        Create a new conversation with the OpenAI API.
+
+        Returns:
+            The created conversation.
+        """
+        return await self.client.conversations.create()
+
+    async def chat(
         self,
         message: str,
-        previous_response_id: str | None = None,
+        conversation_id: str | None = None,
         prompt_cache_key: str | None = None,
         chat_model: str = settings.LLM_MODEL,
         reasoning: dict = settings.LLM_REASONING,
     ) -> Response:
+        """
+        Send a message to the OpenAI API and receive a response.
+
+        Args:
+            message: The message to send to the OpenAI API.
+            conversation_id: The ID of the conversation to send the message to.
+            prompt_cache_key: The key to use for caching the prompt.
+            chat_model: The model to use for the chat.
+            reasoning: The reasoning to use for the chat.
+
+        Returns:
+            The response from the OpenAI API.
+        """
         prompt = self.prompt
 
         input_data = [{"role": "user", "content": message}]
 
         try:
-            response = self.client.responses.create(
+            response = await self.client.responses.create(
                 model=chat_model,
                 reasoning=reasoning,
                 instructions=prompt,
                 input=input_data,
                 prompt_cache_key=prompt_cache_key,
-                previous_response_id=previous_response_id,
+                conversation=conversation_id,
                 store=True,
             )
 

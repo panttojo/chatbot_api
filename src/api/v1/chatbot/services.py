@@ -20,8 +20,21 @@ class ChatbotService:
         self.bot = OpenAIBot()
 
     async def retrieve_conversation(self, conversation_id: UUID | None) -> Conversation:
+        """
+        Retrieve a conversation from the database or create a new one if it doesn't exist.
+
+        Args:
+            conversation_id: The ID of the conversation to retrieve.
+
+        Returns:
+            The retrieved conversation.
+
+        Raises:
+            NotFoundException: If the conversation is not found.
+        """
         if conversation_id is None:
-            conversation = await self.storage.save(Conversation())
+            llm_conversation = await self.bot.create_conversation()
+            conversation = await self.storage.save(Conversation(external_id=llm_conversation.id))
             logger.success(f"Conversation created: {conversation}")
         else:
             conversation = await self.storage.retrieve(Conversation, conversation_id)
@@ -32,6 +45,13 @@ class ChatbotService:
         return conversation
 
     async def save_message(self, conversation: Conversation, message: Message) -> None:
+        """
+        Save a message to the database.
+
+        Args:
+            conversation: The conversation to save the message to.
+            message: The message to save.
+        """
         logger.debug(f"Saving message: {message}")
         await self.storage.save(message)
         await self.storage.refresh(conversation, ["messages"])
@@ -45,16 +65,24 @@ class ChatbotService:
         return None
 
     async def handle_message(self, payload: CreateMessageSchema) -> Conversation:
+        """
+        Handle a message from the user.
+
+        Args:
+            payload: The payload containing the message and conversation ID.
+
+        Returns:
+            The conversation with the new message.
+        """
         conversation = await self.retrieve_conversation(payload.conversation_id)
         conversation_id = conversation.id
 
         user_message = Message(conversation_id=conversation_id, message=payload.message, role=RoleEnum.USER)
         await self.save_message(conversation, user_message)
-        previous_response_id = self.get_previous_response_id(conversation.messages)
 
-        bot_response = self.bot.chat(
+        bot_response = await self.bot.chat(
             message=payload.message,
-            previous_response_id=previous_response_id,
+            conversation_id=conversation.external_id,
             prompt_cache_key=str(conversation_id),
         )
 

@@ -7,7 +7,7 @@ from db.postgres.session import async_session_factory
 from models.chatbot import Conversation, Message
 
 
-def test_chatbot_endpoint(client: TestClient, mock_openai):
+def test_chatbot_endpoint(client: TestClient, mock_openai_chat, mock_openai_create_conversation):
     user_message = "Hello, how are you?"
     response = client.post("/v1/chat", json={"message": user_message})
     response_json = response.json()
@@ -22,7 +22,9 @@ def test_chatbot_endpoint(client: TestClient, mock_openai):
     assert response_json["messages"][1]["role"] == "bot"
 
 
-def test_chatbot_endpoint_with_not_found_conversation_id(client: TestClient, mock_openai):
+def test_chatbot_endpoint_with_not_found_conversation_id(
+    client: TestClient, mock_openai_chat, mock_openai_create_conversation
+):
     user_message = "Hello, how are you?"
     response = client.post("/v1/chat", json={"message": user_message, "conversation_id": str(uuid.uuid4())})
     response_json = response.json()
@@ -33,9 +35,13 @@ def test_chatbot_endpoint_with_not_found_conversation_id(client: TestClient, moc
 
 
 @pytest.mark.asyncio
-async def test_chatbot_endpoint_with_conversation_id(client: TestClient, mock_openai):
+async def test_chatbot_endpoint_with_conversation_id(
+    client: TestClient, mock_openai_chat, mock_openai_create_conversation
+):
     async with async_session_factory() as session:
-        previous_conversation = Conversation(messages=[Message(message="Hello, how are you?", role="user")])
+        previous_conversation = Conversation(
+            messages=[Message(message="Hello, how are you?", role="user")], external_id="123"
+        )
         session.add(previous_conversation)
         await session.commit()
 
@@ -56,7 +62,7 @@ async def test_chatbot_endpoint_with_conversation_id(client: TestClient, mock_op
     assert response_json["messages"][2]["role"] == "bot"
 
 
-def test_endpoint_with_invalid_payload(client: TestClient, mock_openai):
+def test_endpoint_with_invalid_payload(client: TestClient, mock_openai_chat, mock_openai_create_conversation):
     response = client.post("/v1/chat", json={"conversation_id": "Hello, how are you?"})
     response_json = response.json()
 
@@ -67,7 +73,7 @@ def test_endpoint_with_invalid_payload(client: TestClient, mock_openai):
     assert response_json["detail"][0]["type"] == "missing"
 
 
-def test_endpoint_with_message_too_long(client: TestClient, mock_openai):
+def test_endpoint_with_message_too_long(client: TestClient, mock_openai_chat, mock_openai_create_conversation):
     response = client.post("/v1/chat", json={"message": "a" * 1001})
     response_json = response.json()
 

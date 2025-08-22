@@ -6,7 +6,7 @@ from models.enums import RoleEnum
 
 @pytest.mark.asyncio
 async def test_create_conversation(session) -> None:
-    conv = Conversation()
+    conv = Conversation(external_id="123")
     session.add(conv)
     await session.commit()
     await session.refresh(conv, ["messages"])
@@ -18,7 +18,7 @@ async def test_create_conversation(session) -> None:
 @pytest.mark.asyncio
 async def test_create_message(session) -> None:
     # Crear conversación primero
-    conv = Conversation()
+    conv = Conversation(external_id="123")
     session.add(conv)
     await session.commit()
     await session.refresh(conv)
@@ -44,7 +44,7 @@ async def test_create_message(session) -> None:
 
 @pytest.mark.asyncio
 async def test_conversation_messages_relationship(session) -> None:
-    conv = Conversation()
+    conv = Conversation(external_id="123")
     session.add(conv)
     await session.commit()
     await session.refresh(conv)
